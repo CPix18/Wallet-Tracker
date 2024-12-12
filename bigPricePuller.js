@@ -24,6 +24,10 @@ const addressToName = {
     '0x2d94AA3e47d9D5024503Ca8491fcE9A2fB4DA198': 'BANK',
     '0x5aFE3855358E112B5647B952709E6165e1c1eEEe': 'SAFE',
     '0x1121AcC14c63f3C872BFcA497d10926A6098AAc5': 'DOGE-E',
+    '0xA202B2b7B4D2fe56BF81492FFDDA657FE512De07': 'BABYMIGGLES',
+    '0x0b3e328455c4059EEb9e3f84b5543F74E24e7E1b': 'VIRTUALS',
+    '0xbC1852F8940991d91BD2b09A5aBb5E7B8092a16C': 'BASEPRINTER',
+    '0x08bEa95Ec37829CBBdA9B556F340464d38546160': 'BABYDEGEN',
 };
 
 // Enhanced Function to fetch token prices from the Alchemy API by symbols
@@ -34,7 +38,7 @@ const fetchTokenPricesBySymbol = async () => {
     };
 
     try {
-        const response = await fetch('https://api.g.alchemy.com/prices/v1/JG-1nNegXEZoV42hQVsIvrlLs3JRQ13x/tokens/by-symbol?symbols=ETH&symbols=SOL&symbols=TIA&symbols=DOGE', options);
+        const response = await fetch('https://api.g.alchemy.com/prices/v1/JG-1nNegXEZoV42hQVsIvrlLs3JRQ13x/tokens/by-symbol?symbols=ETH&symbols=SOL&symbols=TIA&symbols=DOGE&symbols=LUNA', options);
         const data = await response.json();
 
         console.log('Fetched Token Prices:', JSON.stringify(data, null, 2));
@@ -72,6 +76,10 @@ const fetchAdditionalTokenDataByAddress = async () => {
                 { network: 'base-mainnet', address: '0x78a087d713Be963Bf307b18F2Ff8122EF9A63ae9' },
                 { network: 'base-mainnet', address: '0x0d97F261b1e88845184f678e2d1e7a98D9FD38dE' },
                 { network: 'base-mainnet', address: '0x4ed4E862860beD51a9570b96d89aF5E1B0Efefed' },
+                { network: 'base-mainnet', address: '0xA202B2b7B4D2fe56BF81492FFDDA657FE512De07' },
+                { network: 'base-mainnet', address: '0x0b3e328455c4059EEb9e3f84b5543F74E24e7E1b' },
+                { network: 'base-mainnet', address: '0xbC1852F8940991d91BD2b09A5aBb5E7B8092a16C' },
+                { network: 'base-mainnet', address: '0x08bEa95Ec37829CBBdA9B556F340464d38546160' },
                 { network: 'opt-mainnet', address: '0x4200000000000000000000000000000000000042' },
                 { network: 'opt-mainnet', address: '0x9560e827af36c94d2ac33a39bce1fe78631088db' },
             ]
