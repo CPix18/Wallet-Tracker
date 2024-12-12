@@ -34,7 +34,8 @@ const wallets = [
     "0x2c5d7559cAbf3c9Ee67c92899f7e3bB58E99Aa01",
     "0x46db2fbfe2bbe35b66c70cc9e1dc61f82a6a8ff5",
     "0x3442BFf38Da294EC9cfa7ecD29581cb048aE9107",
-    "0xeca0B6454eFf51b7b6092cB85C7F6848b262BA19"
+    "0xeca0B6454eFf51b7b6092cB85C7F6848b262BA19",
+    "0x751c3268e710945Ad162b88CE52c05706f8C0a99"
 ];
 
 const tokenAddresses = [
@@ -56,7 +57,11 @@ const tokenAddresses = [
     "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
     "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
     "0x0b2C639c533813f4Aa9D7837CAf62653d097Ff85",
-    "0xaf88d065e77c8cC2239327C5EDb3A432268e5831"
+    "0xaf88d065e77c8cC2239327C5EDb3A432268e5831",
+    "0xA202B2b7B4D2fe56BF81492FFDDA657FE512De07",
+    "0x0b3e328455c4059EEb9e3f84b5543F74E24e7E1b",
+    "0xbC1852F8940991d91BD2b09A5aBb5E7B8092a16C",
+    "0x08bEa95Ec37829CBBdA9B556F340464d38546160",
 ];
 
 const tokenDecimals = {
@@ -87,12 +92,31 @@ const tokenNames = [
     "USDC-B",
     "USDC-O",
     "USDC-A",
+    "BABYMIGGLES",
+    "VIRTUALS",
+    "BASEPRINTER",
+    "BABYDEGEN",
 ];
 
 const alchemyApiKey = "JG-1nNegXEZoV42hQVsIvrlLs3JRQ13x"; // Replace with your Alchemy API key
 
 // Output CSV file path
 const outputFilePath = path.join(__dirname, "token_balances.csv");
+
+// Utility function to retry an API call
+async function retryAsync(fn, retries = 3, delayMs = 1000) {
+    let attempt = 0;
+    while (attempt < retries) {
+        try {
+            return await fn();
+        } catch (error) {
+            attempt++;
+            console.warn(`Retry ${attempt}/${retries}: ${error.message}`);
+            if (attempt < retries) await new Promise((resolve) => setTimeout(resolve, delayMs));
+        }
+    }
+    throw new Error(`Failed after ${retries} retries`);
+}
 
 // Function to fetch balances and save to CSV
 async function fetchBalancesAndSaveToCSV() {
@@ -109,7 +133,11 @@ async function fetchBalancesAndSaveToCSV() {
 
         for (const wallet of wallets) {
             console.log(`\nWallet: ${wallet}`);
-            const response = await alchemy.core.getTokenBalances(wallet, tokenAddresses);
+            const response = await retryAsync(
+                () => alchemy.core.getTokenBalances(wallet, tokenAddresses),
+                3, // Number of retries
+                2000 // Delay in milliseconds between retries
+            );
 
             if (response.tokenBalances) {
                 response.tokenBalances.forEach(({ contractAddress, tokenBalance }) => {
